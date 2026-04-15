@@ -41,7 +41,7 @@ function LocateUser() {
 function FlyToLocation({ position }: { position: [number, number] }) {
   const map = useMap();
   useEffect(() => {
-    map.flyTo(position, 17, { duration: 1.2 });
+    map.flyTo(position, 19, { duration: 1.2 });
   }, [map, position[0], position[1]]);
   return null;
 }
@@ -120,6 +120,7 @@ export default function MapInner() {
       <MapContainer
         center={[13.7563, 100.5018]}
         zoom={15}
+        maxZoom={20}
         zoomControl={false}
         className="h-full w-full"
       >
@@ -150,29 +151,29 @@ export default function MapInner() {
         className={`absolute bottom-0 left-0 right-0 z-[1000] transform transition-transform duration-300 ease-in-out ${selected ? "translate-y-0" : "translate-y-full"}`}
       >
         {selected && (
-          <div className="mx-auto max-w-2xl rounded-t-2xl bg-card p-5 shadow-[0_-4px_24px_rgba(0,0,0,0.15)]">
-            <div className="mb-3 flex items-start justify-between">
-              <h2 className="text-lg font-bold text-card-foreground">{selected.title}</h2>
+          <div className="mx-auto max-w-3xl rounded-t-2xl bg-card p-7 shadow-[0_-4px_24px_rgba(0,0,0,0.15)]">
+            <div className="mb-4 flex items-start justify-between">
+              <h2 className="text-2xl font-bold text-card-foreground">{selected.title}</h2>
               <button
                 onClick={() => setSelected(null)}
-                className="ml-4 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-muted text-muted-foreground transition-colors hover:bg-accent"
+                className="ml-4 flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-muted text-lg text-muted-foreground transition-colors hover:bg-accent"
               >
                 ✕
               </button>
             </div>
-            <div className="flex gap-4">
+            <div className="flex gap-5">
               {selected.image && (
                 <img
                   src={selected.image}
                   alt={selected.title}
-                  className="h-24 w-32 rounded-lg object-cover"
+                  className="h-36 w-48 rounded-xl object-cover"
                 />
               )}
-              <p className="text-sm leading-relaxed text-muted-foreground">{selected.description}</p>
+              <p className="text-base leading-relaxed text-muted-foreground">{selected.description}</p>
             </div>
-            <div className="mt-3 flex gap-2 text-xs text-muted-foreground">
-              <span className="rounded-full bg-muted px-3 py-1">📍 Bangkok, Thailand</span>
-              <span className="rounded-full bg-muted px-3 py-1">
+            <div className="mt-4 flex gap-2 text-sm text-muted-foreground">
+              <span className="rounded-full bg-muted px-4 py-1.5">📍 Bangkok, Thailand</span>
+              <span className="rounded-full bg-muted px-4 py-1.5">
                 {selected.position[0].toFixed(4)}, {selected.position[1].toFixed(4)}
               </span>
             </div>
