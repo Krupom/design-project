@@ -1,9 +1,12 @@
-import { lazy, Suspense } from "react";
+import { lazy, Suspense, useEffect, useState } from "react";
 
 const MapInner = lazy(() => import("./MapInner"));
 
 export default function MapView() {
-  if (typeof window === "undefined") {
+  const [isClient, setIsClient] = useState(false);
+  useEffect(() => setIsClient(true), []);
+
+  if (!isClient) {
     return (
       <div className="flex h-screen w-screen items-center justify-center bg-background text-foreground">
         Loading map…

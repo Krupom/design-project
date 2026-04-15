@@ -19,40 +19,46 @@ interface SocketLocation {
   socketType: SocketType;
   isFree: boolean;
   minimumCost?: string;
+  floor?: string;
   image?: string;
 }
 
 const bangkokSockets: SocketLocation[] = [
-  { position: [13.7563, 100.5018], title: "Grand Palace Charging Station", description: "Free public charging station near the Grand Palace entrance.", socketType: "USB-C", isFree: true },
-  { position: [13.7468, 100.5331], title: "Wat Arun Visitor Center", description: "Socket available at the visitor rest area. Purchase required from café.", socketType: "Type A", isFree: false, minimumCost: "50 THB" },
-  { position: [13.7516, 100.4915], title: "Wat Pho Rest Area", description: "Free charging sockets near the massage school area.", socketType: "Type C", isFree: true },
-  { position: [13.7466, 100.5392], title: "Khao San Road - Coffee Hub", description: "Available for customers. Minimum order required.", socketType: "Universal", isFree: false, minimumCost: "80 THB" },
-  { position: [13.7469, 100.5349], title: "Siam Paragon - Level 2 Lounge", description: "Free USB charging stations on Level 2 near food court.", socketType: "USB-A", isFree: true },
-  { position: [13.7274, 100.5234], title: "Lumphini Park Info Booth", description: "Free public socket at the information booth.", socketType: "Type A", isFree: true },
-  { position: [13.7440, 100.4935], title: "Chinatown Co-working Café", description: "Socket access with minimum drink purchase.", socketType: "Type C", isFree: false, minimumCost: "60 THB" },
-  { position: [13.7468, 100.5605], title: "Chatuchak Market Office", description: "Paid charging service near Section 8.", socketType: "USB-C", isFree: false, minimumCost: "20 THB" },
-  { position: [13.7262, 100.5141], title: "MBK Center - 3rd Floor", description: "Free public charging area on the 3rd floor near escalators.", socketType: "USB-C", isFree: true },
-  { position: [13.7200, 100.5147], title: "Jim Thompson Café", description: "Socket available for café customers only.", socketType: "Type B", isFree: false, minimumCost: "100 THB" },
-  { position: [13.7450, 100.5340], title: "CentralWorld Free Zone", description: "Free public USB sockets on the ground floor.", socketType: "USB-A", isFree: true },
-  { position: [13.7380, 100.5600], title: "Ekkamai BTS Station", description: "Paid charging kiosk at BTS Ekkamai.", socketType: "Universal", isFree: false, minimumCost: "30 THB" },
+  { position: [13.7563, 100.5018], title: "Grand Palace Charging Station", description: "Free public charging station near the Grand Palace entrance.", socketType: "USB-C", isFree: true, floor: "Ground Floor" },
+  { position: [13.7468, 100.5331], title: "Wat Arun Visitor Center", description: "Socket available at the visitor rest area. Purchase required from café.", socketType: "Type A", isFree: false, minimumCost: "50 THB", floor: "1st Floor" },
+  { position: [13.7516, 100.4915], title: "Wat Pho Rest Area", description: "Free charging sockets near the massage school area.", socketType: "Type C", isFree: true, floor: "Ground Floor" },
+  { position: [13.7466, 100.5392], title: "Khao San Road - Coffee Hub", description: "Available for customers. Minimum order required.", socketType: "Universal", isFree: false, minimumCost: "80 THB", floor: "1st Floor" },
+  { position: [13.7469, 100.5349], title: "Siam Paragon - Level 2 Lounge", description: "Free USB charging stations on Level 2 near food court.", socketType: "USB-A", isFree: true, floor: "2nd Floor" },
+  { position: [13.7274, 100.5234], title: "Lumphini Park Info Booth", description: "Free public socket at the information booth.", socketType: "Type A", isFree: true, floor: "Outdoor" },
+  { position: [13.7440, 100.4935], title: "Chinatown Co-working Café", description: "Socket access with minimum drink purchase.", socketType: "Type C", isFree: false, minimumCost: "60 THB", floor: "2nd Floor" },
+  { position: [13.7468, 100.5605], title: "Chatuchak Market Office", description: "Paid charging service near Section 8.", socketType: "USB-C", isFree: false, minimumCost: "20 THB", floor: "Ground Floor" },
+  { position: [13.7262, 100.5141], title: "MBK Center - 3rd Floor", description: "Free public charging area on the 3rd floor near escalators.", socketType: "USB-C", isFree: true, floor: "3rd Floor" },
+  { position: [13.7200, 100.5147], title: "Jim Thompson Café", description: "Socket available for café customers only.", socketType: "Type B", isFree: false, minimumCost: "100 THB", floor: "1st Floor" },
+  { position: [13.7450, 100.5340], title: "CentralWorld Free Zone", description: "Free public USB sockets on the ground floor.", socketType: "USB-A", isFree: true, floor: "Ground Floor" },
+  { position: [13.7380, 100.5600], title: "Ekkamai BTS Station", description: "Paid charging kiosk at BTS Ekkamai.", socketType: "Universal", isFree: false, minimumCost: "30 THB", floor: "Platform Level" },
 ];
 
-function createColoredIcon(color: "blue" | "red") {
-  const hue = color === "blue" ? "hue-rotate(0deg)" : "hue-rotate(140deg) saturate(2)";
+function createColoredIcon(color: "blue" | "red", large = false) {
+  const size: [number, number] = large ? [38, 62] : [25, 41];
+  const anchor: [number, number] = large ? [19, 62] : [12, 41];
+  const popupAnchor: [number, number] = large ? [1, -52] : [1, -34];
+  const shadowSize: [number, number] = large ? [62, 62] : [41, 41];
   return new L.Icon({
     iconUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png",
     iconRetinaUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png",
     shadowUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
-    iconSize: [25, 41],
-    iconAnchor: [12, 41],
-    popupAnchor: [1, -34],
-    shadowSize: [41, 41],
+    iconSize: size,
+    iconAnchor: anchor,
+    popupAnchor,
+    shadowSize,
     className: `marker-${color}`,
   });
 }
 
 const blueIcon = createColoredIcon("blue");
 const redIcon = createColoredIcon("red");
+const blueIconLarge = createColoredIcon("blue", true);
+const redIconLarge = createColoredIcon("red", true);
 
 function LocateUser() {
   const map = useMap();
@@ -168,18 +174,24 @@ export default function MapInner() {
         <ZoomControl position="topright" />
         <LocateUser />
         {selected && <FlyToLocation position={selected.position} />}
-        {bangkokSockets.map((loc) => (
-          <Marker
-            key={loc.title}
-            position={loc.position}
-            icon={loc.isFree ? blueIcon : redIcon}
-            eventHandlers={{ click: () => setSelected(loc) }}
-          >
-            <Popup>
-              <span className="text-sm font-semibold">{loc.title}</span>
-            </Popup>
-          </Marker>
-        ))}
+        {bangkokSockets.map((loc) => {
+          const isSelected = selected?.title === loc.title;
+          const icon = loc.isFree
+            ? (isSelected ? blueIconLarge : blueIcon)
+            : (isSelected ? redIconLarge : redIcon);
+          return (
+            <Marker
+              key={loc.title}
+              position={loc.position}
+              icon={icon}
+              eventHandlers={{ click: () => setSelected(loc) }}
+            >
+              <Popup>
+                <span className="text-sm font-semibold">{loc.title}</span>
+              </Popup>
+            </Marker>
+          );
+        })}
       </MapContainer>
 
       <SearchBar locations={bangkokSockets} onSelect={setSelected} />
@@ -221,6 +233,13 @@ export default function MapInner() {
                   }`}>
                     🔌 {selected.socketType}
                   </span>
+                  {selected.floor && (
+                    <span className={`rounded-full px-3 py-1 text-xs font-semibold ${
+                      selected.isFree ? "bg-blue-100 text-blue-700" : "bg-red-100 text-red-700"
+                    }`}>
+                      🏢 {selected.floor}
+                    </span>
+                  )}
                 </div>
               </div>
               <button
