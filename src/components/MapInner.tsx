@@ -38,22 +38,27 @@ const bangkokSockets: SocketLocation[] = [
   { position: [13.7380, 100.5600], title: "Ekkamai BTS Station", description: "Paid charging kiosk at BTS Ekkamai.", socketType: "Universal", isFree: false, minimumCost: "30 THB", floor: "Platform Level" },
 ];
 
-function createColoredIcon(color: "blue" | "red") {
-  const hue = color === "blue" ? "hue-rotate(0deg)" : "hue-rotate(140deg) saturate(2)";
+function createColoredIcon(color: "blue" | "red", large = false) {
+  const size: [number, number] = large ? [38, 62] : [25, 41];
+  const anchor: [number, number] = large ? [19, 62] : [12, 41];
+  const popupAnchor: [number, number] = large ? [1, -52] : [1, -34];
+  const shadowSize: [number, number] = large ? [62, 62] : [41, 41];
   return new L.Icon({
     iconUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png",
     iconRetinaUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png",
     shadowUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
-    iconSize: [25, 41],
-    iconAnchor: [12, 41],
-    popupAnchor: [1, -34],
-    shadowSize: [41, 41],
+    iconSize: size,
+    iconAnchor: anchor,
+    popupAnchor,
+    shadowSize,
     className: `marker-${color}`,
   });
 }
 
 const blueIcon = createColoredIcon("blue");
 const redIcon = createColoredIcon("red");
+const blueIconLarge = createColoredIcon("blue", true);
+const redIconLarge = createColoredIcon("red", true);
 
 function LocateUser() {
   const map = useMap();
