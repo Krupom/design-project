@@ -10,25 +10,49 @@ L.Icon.Default.mergeOptions({
   shadowUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
 });
 
-interface Location {
+type SocketType = "Type A" | "Type B" | "Type C" | "Type G" | "USB-A" | "USB-C" | "Universal";
+
+interface SocketLocation {
   position: [number, number];
   title: string;
   description: string;
+  socketType: SocketType;
+  isFree: boolean;
+  minimumCost?: string;
   image?: string;
 }
 
-const bangkokLocations: Location[] = [
-  { position: [13.7563, 100.5018], title: "Grand Palace", description: "Former royal residence and Bangkok's most famous landmark, featuring stunning architecture and the sacred Emerald Buddha.", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Chakri_Maha_Prasat_Throne_Hall.jpg/640px-Chakri_Maha_Prasat_Throne_Hall.jpg" },
-  { position: [13.7468, 100.5331], title: "Wat Arun", description: "The Temple of Dawn, an iconic riverside temple adorned with colorful porcelain and seashells.", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/73/Wat_Arun%2C_view_from_Chao_Phraya_River.jpg/640px-Wat_Arun%2C_view_from_Chao_Phraya_River.jpg" },
-  { position: [13.7516, 100.4915], title: "Wat Pho", description: "Home to the massive 46-meter Reclining Buddha and Thailand's first public university of traditional medicine.", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fd/Wat_Pho%2C_Bangkok%2C_Thailand.jpg/640px-Wat_Pho%2C_Bangkok%2C_Thailand.jpg" },
-  { position: [13.7466, 100.5392], title: "Khao San Road", description: "The famous backpacker street, bustling with street food, shops, bars, and vibrant nightlife." },
-  { position: [13.7469, 100.5349], title: "Siam Paragon", description: "One of Bangkok's largest and most luxurious shopping malls with an aquarium, cineplex, and designer boutiques." },
-  { position: [13.7274, 100.5234], title: "Lumphini Park", description: "Bangkok's largest green oasis in the heart of the city, perfect for jogging, paddle boating, and spotting monitor lizards." },
-  { position: [13.7440, 100.4935], title: "Chinatown (Yaowarat)", description: "A vibrant neighborhood famous for incredible street food, gold shops, and Chinese temples." },
-  { position: [13.7468, 100.5605], title: "Chatuchak Weekend Market", description: "One of the world's largest outdoor markets with over 15,000 stalls selling everything imaginable." },
-  { position: [13.7262, 100.5141], title: "MBK Center", description: "Popular shopping mall known for electronics, fashion, and affordable goods across 8 floors." },
-  { position: [13.7200, 100.5147], title: "Jim Thompson House", description: "Museum showcasing traditional Thai architecture and the art collection of the legendary American silk entrepreneur." },
+const bangkokSockets: SocketLocation[] = [
+  { position: [13.7563, 100.5018], title: "Grand Palace Charging Station", description: "Free public charging station near the Grand Palace entrance.", socketType: "USB-C", isFree: true },
+  { position: [13.7468, 100.5331], title: "Wat Arun Visitor Center", description: "Socket available at the visitor rest area. Purchase required from café.", socketType: "Type A", isFree: false, minimumCost: "50 THB" },
+  { position: [13.7516, 100.4915], title: "Wat Pho Rest Area", description: "Free charging sockets near the massage school area.", socketType: "Type C", isFree: true },
+  { position: [13.7466, 100.5392], title: "Khao San Road - Coffee Hub", description: "Available for customers. Minimum order required.", socketType: "Universal", isFree: false, minimumCost: "80 THB" },
+  { position: [13.7469, 100.5349], title: "Siam Paragon - Level 2 Lounge", description: "Free USB charging stations on Level 2 near food court.", socketType: "USB-A", isFree: true },
+  { position: [13.7274, 100.5234], title: "Lumphini Park Info Booth", description: "Free public socket at the information booth.", socketType: "Type A", isFree: true },
+  { position: [13.7440, 100.4935], title: "Chinatown Co-working Café", description: "Socket access with minimum drink purchase.", socketType: "Type C", isFree: false, minimumCost: "60 THB" },
+  { position: [13.7468, 100.5605], title: "Chatuchak Market Office", description: "Paid charging service near Section 8.", socketType: "USB-C", isFree: false, minimumCost: "20 THB" },
+  { position: [13.7262, 100.5141], title: "MBK Center - 3rd Floor", description: "Free public charging area on the 3rd floor near escalators.", socketType: "USB-C", isFree: true },
+  { position: [13.7200, 100.5147], title: "Jim Thompson Café", description: "Socket available for café customers only.", socketType: "Type B", isFree: false, minimumCost: "100 THB" },
+  { position: [13.7450, 100.5340], title: "CentralWorld Free Zone", description: "Free public USB sockets on the ground floor.", socketType: "USB-A", isFree: true },
+  { position: [13.7380, 100.5600], title: "Ekkamai BTS Station", description: "Paid charging kiosk at BTS Ekkamai.", socketType: "Universal", isFree: false, minimumCost: "30 THB" },
 ];
+
+function createColoredIcon(color: "blue" | "red") {
+  const hue = color === "blue" ? "hue-rotate(0deg)" : "hue-rotate(140deg) saturate(2)";
+  return new L.Icon({
+    iconUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png",
+    iconRetinaUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png",
+    shadowUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
+    iconSize: [25, 41],
+    iconAnchor: [12, 41],
+    popupAnchor: [1, -34],
+    shadowSize: [41, 41],
+    className: `marker-${color}`,
+  });
+}
+
+const blueIcon = createColoredIcon("blue");
+const redIcon = createColoredIcon("red");
 
 function LocateUser() {
   const map = useMap();
@@ -47,8 +71,8 @@ function FlyToLocation({ position }: { position: [number, number] }) {
 }
 
 interface SearchBarProps {
-  locations: Location[];
-  onSelect: (loc: Location) => void;
+  locations: SocketLocation[];
+  onSelect: (loc: SocketLocation) => void;
 }
 
 function SearchBar({ locations, onSelect }: SearchBarProps) {
@@ -66,7 +90,7 @@ function SearchBar({ locations, onSelect }: SearchBarProps) {
         <input
           ref={inputRef}
           type="text"
-          placeholder="Search locations..."
+          placeholder="Search sockets..."
           value={query}
           onChange={(e) => { setQuery(e.target.value); setOpen(true); }}
           onFocus={() => setOpen(true)}
@@ -92,31 +116,42 @@ function SearchBar({ locations, onSelect }: SearchBarProps) {
               onClick={() => { onSelect(loc); setQuery(loc.title); setOpen(false); inputRef.current?.blur(); }}
               className="flex w-full items-center gap-3 px-4 py-3 text-left text-sm text-card-foreground transition-colors hover:bg-accent"
             >
-              <span className="text-base">📍</span>
-              <div>
+              <span className={`text-base ${loc.isFree ? "text-blue-500" : "text-red-500"}`}>🔌</span>
+              <div className="flex-1">
                 <div className="font-medium">{loc.title}</div>
-                <div className="text-xs text-muted-foreground">{loc.description.slice(0, 60)}…</div>
+                <div className="text-xs text-muted-foreground">{loc.socketType} · {loc.isFree ? "Free" : loc.minimumCost}</div>
               </div>
+              <span className={`rounded-full px-2 py-0.5 text-[10px] font-bold uppercase ${loc.isFree ? "bg-blue-100 text-blue-700" : "bg-red-100 text-red-700"}`}>
+                {loc.isFree ? "Free" : "Paid"}
+              </span>
             </button>
           ))}
         </div>
       )}
       {open && filtered.length === 0 && query.trim() && (
         <div className="mt-1 rounded-xl bg-card p-4 text-center text-sm text-muted-foreground shadow-lg">
-          No locations found
+          No sockets found
         </div>
       )}
-      {/* Backdrop to close dropdown */}
       {open && <div className="fixed inset-0 z-[-1]" onClick={() => setOpen(false)} />}
     </div>
   );
 }
 
 export default function MapInner() {
-  const [selected, setSelected] = useState<Location | null>(null);
+  const [selected, setSelected] = useState<SocketLocation | null>(null);
+
+  const panelColor = selected?.isFree ? "blue" : "red";
 
   return (
     <div className="relative h-screen w-screen">
+      {/* Custom marker styles */}
+      <style>{`
+        .marker-red {
+          filter: hue-rotate(140deg) saturate(2) brightness(0.8);
+        }
+      `}</style>
+
       <MapContainer
         center={[13.7563, 100.5018]}
         zoom={15}
@@ -133,10 +168,11 @@ export default function MapInner() {
         <ZoomControl position="topright" />
         <LocateUser />
         {selected && <FlyToLocation position={selected.position} />}
-        {bangkokLocations.map((loc) => (
+        {bangkokSockets.map((loc) => (
           <Marker
             key={loc.title}
             position={loc.position}
+            icon={loc.isFree ? blueIcon : redIcon}
             eventHandlers={{ click: () => setSelected(loc) }}
           >
             <Popup>
@@ -146,36 +182,74 @@ export default function MapInner() {
         ))}
       </MapContainer>
 
-      <SearchBar locations={bangkokLocations} onSelect={setSelected} />
+      <SearchBar locations={bangkokSockets} onSelect={setSelected} />
+
+      {/* Legend */}
+      <div className="absolute bottom-4 right-4 z-[1000] rounded-xl bg-card/90 px-4 py-3 shadow-lg backdrop-blur-sm">
+        <div className="mb-1 text-xs font-semibold text-card-foreground">Legend</div>
+        <div className="flex items-center gap-2 text-xs text-muted-foreground">
+          <span className="inline-block h-3 w-3 rounded-full bg-blue-500" /> Free
+        </div>
+        <div className="flex items-center gap-2 text-xs text-muted-foreground">
+          <span className="inline-block h-3 w-3 rounded-full bg-red-500" /> Paid
+        </div>
+      </div>
 
       {/* Bottom detail panel */}
       <div
         className={`absolute bottom-0 left-0 right-0 z-[1000] transform transition-transform duration-300 ease-in-out ${selected ? "translate-y-0" : "translate-y-full"}`}
       >
         {selected && (
-          <div className="mx-auto max-w-3xl rounded-t-2xl bg-card p-7 shadow-[0_-4px_24px_rgba(0,0,0,0.15)]">
+          <div className={`mx-auto max-w-3xl rounded-t-2xl p-7 shadow-[0_-4px_24px_rgba(0,0,0,0.15)] ${
+            selected.isFree
+              ? "bg-blue-50 border-t-4 border-blue-500"
+              : "bg-red-50 border-t-4 border-red-500"
+          }`}>
             <div className="mb-4 flex items-start justify-between">
-              <h2 className="text-2xl font-bold text-card-foreground">{selected.title}</h2>
+              <div>
+                <h2 className={`text-2xl font-bold ${selected.isFree ? "text-blue-900" : "text-red-900"}`}>
+                  {selected.title}
+                </h2>
+                <div className="mt-1 flex items-center gap-2">
+                  <span className={`rounded-full px-3 py-1 text-xs font-bold uppercase ${
+                    selected.isFree ? "bg-blue-200 text-blue-800" : "bg-red-200 text-red-800"
+                  }`}>
+                    {selected.isFree ? "Free" : "Paid"}
+                  </span>
+                  <span className={`rounded-full px-3 py-1 text-xs font-semibold ${
+                    selected.isFree ? "bg-blue-100 text-blue-700" : "bg-red-100 text-red-700"
+                  }`}>
+                    🔌 {selected.socketType}
+                  </span>
+                </div>
+              </div>
               <button
                 onClick={() => setSelected(null)}
-                className="ml-4 flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-muted text-lg text-muted-foreground transition-colors hover:bg-accent"
+                className="ml-4 flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white/60 text-lg text-gray-500 transition-colors hover:bg-white"
               >
                 ✕
               </button>
             </div>
-            <div className="flex gap-5">
-              {selected.image && (
-                <img
-                  src={selected.image}
-                  alt={selected.title}
-                  className="h-36 w-48 rounded-xl object-cover"
-                />
-              )}
-              <p className="text-base leading-relaxed text-muted-foreground">{selected.description}</p>
-            </div>
-            <div className="mt-4 flex gap-2 text-sm text-muted-foreground">
-              <span className="rounded-full bg-muted px-4 py-1.5">📍 Bangkok, Thailand</span>
-              <span className="rounded-full bg-muted px-4 py-1.5">
+
+            <p className={`text-base leading-relaxed ${selected.isFree ? "text-blue-800" : "text-red-800"}`}>
+              {selected.description}
+            </p>
+
+            {!selected.isFree && selected.minimumCost && (
+              <div className="mt-4 flex items-center gap-2 rounded-lg bg-red-100 px-4 py-3">
+                <span className="text-lg">💰</span>
+                <div>
+                  <div className="text-sm font-semibold text-red-900">Minimum Cost Required</div>
+                  <div className="text-lg font-bold text-red-700">{selected.minimumCost}</div>
+                </div>
+              </div>
+            )}
+
+            <div className="mt-4 flex gap-2 text-sm">
+              <span className={`rounded-full px-4 py-1.5 ${selected.isFree ? "bg-blue-100 text-blue-700" : "bg-red-100 text-red-700"}`}>
+                📍 Bangkok, Thailand
+              </span>
+              <span className={`rounded-full px-4 py-1.5 ${selected.isFree ? "bg-blue-100 text-blue-700" : "bg-red-100 text-red-700"}`}>
                 {selected.position[0].toFixed(4)}, {selected.position[1].toFixed(4)}
               </span>
             </div>
