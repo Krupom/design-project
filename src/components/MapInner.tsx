@@ -174,18 +174,24 @@ export default function MapInner() {
         <ZoomControl position="topright" />
         <LocateUser />
         {selected && <FlyToLocation position={selected.position} />}
-        {bangkokSockets.map((loc) => (
-          <Marker
-            key={loc.title}
-            position={loc.position}
-            icon={loc.isFree ? blueIcon : redIcon}
-            eventHandlers={{ click: () => setSelected(loc) }}
-          >
-            <Popup>
-              <span className="text-sm font-semibold">{loc.title}</span>
-            </Popup>
-          </Marker>
-        ))}
+        {bangkokSockets.map((loc) => {
+          const isSelected = selected?.title === loc.title;
+          const icon = loc.isFree
+            ? (isSelected ? blueIconLarge : blueIcon)
+            : (isSelected ? redIconLarge : redIcon);
+          return (
+            <Marker
+              key={loc.title}
+              position={loc.position}
+              icon={icon}
+              eventHandlers={{ click: () => setSelected(loc) }}
+            >
+              <Popup>
+                <span className="text-sm font-semibold">{loc.title}</span>
+              </Popup>
+            </Marker>
+          );
+        })}
       </MapContainer>
 
       <SearchBar locations={bangkokSockets} onSelect={setSelected} />
@@ -227,6 +233,13 @@ export default function MapInner() {
                   }`}>
                     🔌 {selected.socketType}
                   </span>
+                  {selected.floor && (
+                    <span className={`rounded-full px-3 py-1 text-xs font-semibold ${
+                      selected.isFree ? "bg-blue-100 text-blue-700" : "bg-red-100 text-red-700"
+                    }`}>
+                      🏢 {selected.floor}
+                    </span>
+                  )}
                 </div>
               </div>
               <button
