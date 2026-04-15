@@ -24,18 +24,18 @@ interface SocketLocation {
 }
 
 const bangkokSockets: SocketLocation[] = [
-  { position: [13.7563, 100.5018], title: "Grand Palace Charging Station", description: "Free public charging station near the Grand Palace entrance.", socketType: "USB-C", isFree: true },
-  { position: [13.7468, 100.5331], title: "Wat Arun Visitor Center", description: "Socket available at the visitor rest area. Purchase required from café.", socketType: "Type A", isFree: false, minimumCost: "50 THB" },
-  { position: [13.7516, 100.4915], title: "Wat Pho Rest Area", description: "Free charging sockets near the massage school area.", socketType: "Type C", isFree: true },
-  { position: [13.7466, 100.5392], title: "Khao San Road - Coffee Hub", description: "Available for customers. Minimum order required.", socketType: "Universal", isFree: false, minimumCost: "80 THB" },
-  { position: [13.7469, 100.5349], title: "Siam Paragon - Level 2 Lounge", description: "Free USB charging stations on Level 2 near food court.", socketType: "USB-A", isFree: true },
-  { position: [13.7274, 100.5234], title: "Lumphini Park Info Booth", description: "Free public socket at the information booth.", socketType: "Type A", isFree: true },
-  { position: [13.7440, 100.4935], title: "Chinatown Co-working Café", description: "Socket access with minimum drink purchase.", socketType: "Type C", isFree: false, minimumCost: "60 THB" },
-  { position: [13.7468, 100.5605], title: "Chatuchak Market Office", description: "Paid charging service near Section 8.", socketType: "USB-C", isFree: false, minimumCost: "20 THB" },
-  { position: [13.7262, 100.5141], title: "MBK Center - 3rd Floor", description: "Free public charging area on the 3rd floor near escalators.", socketType: "USB-C", isFree: true },
-  { position: [13.7200, 100.5147], title: "Jim Thompson Café", description: "Socket available for café customers only.", socketType: "Type B", isFree: false, minimumCost: "100 THB" },
-  { position: [13.7450, 100.5340], title: "CentralWorld Free Zone", description: "Free public USB sockets on the ground floor.", socketType: "USB-A", isFree: true },
-  { position: [13.7380, 100.5600], title: "Ekkamai BTS Station", description: "Paid charging kiosk at BTS Ekkamai.", socketType: "Universal", isFree: false, minimumCost: "30 THB" },
+  { position: [13.7563, 100.5018], title: "Grand Palace Charging Station", description: "Free public charging station near the Grand Palace entrance.", socketType: "USB-C", isFree: true, floor: "Ground Floor" },
+  { position: [13.7468, 100.5331], title: "Wat Arun Visitor Center", description: "Socket available at the visitor rest area. Purchase required from café.", socketType: "Type A", isFree: false, minimumCost: "50 THB", floor: "1st Floor" },
+  { position: [13.7516, 100.4915], title: "Wat Pho Rest Area", description: "Free charging sockets near the massage school area.", socketType: "Type C", isFree: true, floor: "Ground Floor" },
+  { position: [13.7466, 100.5392], title: "Khao San Road - Coffee Hub", description: "Available for customers. Minimum order required.", socketType: "Universal", isFree: false, minimumCost: "80 THB", floor: "1st Floor" },
+  { position: [13.7469, 100.5349], title: "Siam Paragon - Level 2 Lounge", description: "Free USB charging stations on Level 2 near food court.", socketType: "USB-A", isFree: true, floor: "2nd Floor" },
+  { position: [13.7274, 100.5234], title: "Lumphini Park Info Booth", description: "Free public socket at the information booth.", socketType: "Type A", isFree: true, floor: "Outdoor" },
+  { position: [13.7440, 100.4935], title: "Chinatown Co-working Café", description: "Socket access with minimum drink purchase.", socketType: "Type C", isFree: false, minimumCost: "60 THB", floor: "2nd Floor" },
+  { position: [13.7468, 100.5605], title: "Chatuchak Market Office", description: "Paid charging service near Section 8.", socketType: "USB-C", isFree: false, minimumCost: "20 THB", floor: "Ground Floor" },
+  { position: [13.7262, 100.5141], title: "MBK Center - 3rd Floor", description: "Free public charging area on the 3rd floor near escalators.", socketType: "USB-C", isFree: true, floor: "3rd Floor" },
+  { position: [13.7200, 100.5147], title: "Jim Thompson Café", description: "Socket available for café customers only.", socketType: "Type B", isFree: false, minimumCost: "100 THB", floor: "1st Floor" },
+  { position: [13.7450, 100.5340], title: "CentralWorld Free Zone", description: "Free public USB sockets on the ground floor.", socketType: "USB-A", isFree: true, floor: "Ground Floor" },
+  { position: [13.7380, 100.5600], title: "Ekkamai BTS Station", description: "Paid charging kiosk at BTS Ekkamai.", socketType: "Universal", isFree: false, minimumCost: "30 THB", floor: "Platform Level" },
 ];
 
 function createColoredIcon(color: "blue" | "red") {
