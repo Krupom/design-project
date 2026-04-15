@@ -1,19 +1,11 @@
-import { MapContainer, TileLayer, ZoomControl } from "react-leaflet";
-import "leaflet/dist/leaflet.css";
+import { lazy, Suspense } from "react";
+
+const MapInner = lazy(() => import("./MapInner"));
 
 export default function MapView() {
   return (
-    <MapContainer
-      center={[40.7128, -74.006]}
-      zoom={13}
-      zoomControl={false}
-      className="h-screen w-screen"
-    >
-      <TileLayer
-        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-      />
-      <ZoomControl position="bottomright" />
-    </MapContainer>
+    <Suspense fallback={<div className="flex h-screen w-screen items-center justify-center bg-background text-foreground">Loading map…</div>}>
+      <MapInner />
+    </Suspense>
   );
 }
