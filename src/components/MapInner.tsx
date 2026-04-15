@@ -19,6 +19,7 @@ interface SocketLocation {
   socketType: SocketType;
   isFree: boolean;
   minimumCost?: string;
+  floor?: string;
   image?: string;
 }
 
