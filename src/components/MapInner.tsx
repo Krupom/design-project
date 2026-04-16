@@ -2,6 +2,7 @@ import { useEffect, useState, useRef } from "react";
 import { MapContainer, TileLayer, ZoomControl, Marker, Popup, useMap, useMapEvents } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
+import logoImage from "../../logo.png";
 import UserLocationMarker from "./UserLocationMarker";
 import { Button } from "./ui/button";
 import { Plus, Check, X, MapPin, ShieldCheck, Star, Users, MessageSquare, ChevronDown, ChevronUp, Camera, Upload } from "lucide-react";
@@ -132,32 +133,32 @@ function SearchBar({ locations, onSelect }: SearchBarProps) {
             ✕
           </button>
         )}
+        {open && filtered.length > 0 && (
+          <div className="mt-1 max-h-60 overflow-y-auto rounded-xl bg-card shadow-lg border border-border">
+            {filtered.map((loc) => (
+              <button
+                key={loc.title}
+                onClick={() => { onSelect(loc); setQuery(loc.title); setOpen(false); inputRef.current?.blur(); }}
+                className="flex w-full items-center gap-3 px-4 py-3 text-left text-sm text-card-foreground transition-colors hover:bg-accent border-b border-border last:border-0"
+              >
+                <span className={`text-base ${loc.isFree ? "text-blue-500" : "text-red-500"}`}>🔌</span>
+                <div className="flex-1">
+                  <div className="font-medium line-clamp-1">{loc.title}</div>
+                  <div className="text-xs text-muted-foreground">{loc.socketType} · {loc.isFree ? "Free" : loc.minimumCost}</div>
+                </div>
+                <span className={`rounded-full px-2 py-0.5 text-[10px] font-bold uppercase ${loc.isFree ? "bg-blue-100 text-blue-700" : "bg-red-100 text-red-700"}`}>
+                  {loc.isFree ? "Free" : "Paid"}
+                </span>
+              </button>
+            ))}
+          </div>
+        )}
+        {open && filtered.length === 0 && query.trim() && (
+          <div className="mt-1 rounded-xl bg-card p-4 text-center text-sm text-muted-foreground shadow-lg border border-border">
+            No sockets found
+          </div>
+        )}
       </div>
-      {open && filtered.length > 0 && (
-        <div className="mt-1 max-h-60 overflow-y-auto rounded-xl bg-card shadow-lg">
-          {filtered.map((loc) => (
-            <button
-              key={loc.title}
-              onClick={() => { onSelect(loc); setQuery(loc.title); setOpen(false); inputRef.current?.blur(); }}
-              className="flex w-full items-center gap-3 px-4 py-3 text-left text-sm text-card-foreground transition-colors hover:bg-accent"
-            >
-              <span className={`text-base ${loc.isFree ? "text-blue-500" : "text-red-500"}`}>🔌</span>
-              <div className="flex-1">
-                <div className="font-medium">{loc.title}</div>
-                <div className="text-xs text-muted-foreground">{loc.socketType} · {loc.isFree ? "Free" : loc.minimumCost}</div>
-              </div>
-              <span className={`rounded-full px-2 py-0.5 text-[10px] font-bold uppercase ${loc.isFree ? "bg-blue-100 text-blue-700" : "bg-red-100 text-red-700"}`}>
-                {loc.isFree ? "Free" : "Paid"}
-              </span>
-            </button>
-          ))}
-        </div>
-      )}
-      {open && filtered.length === 0 && query.trim() && (
-        <div className="mt-1 rounded-xl bg-card p-4 text-center text-sm text-muted-foreground shadow-lg">
-          No sockets found
-        </div>
-      )}
       {open && <div className="fixed inset-0 z-[-1]" onClick={() => setOpen(false)} />}
     </div>
   );
@@ -404,7 +405,10 @@ export default function MapInner() {
 
       {/* Legend - Exactly top-left corner */}
       <div className="absolute left-4 top-4 z-[1010] rounded-2xl bg-card p-5 shadow-2xl border border-border/50 transition-all hover:scale-105">
-        <div className="mb-3 text-lg font-bold text-card-foreground">Legend</div>
+        <div className="mb-4 flex items-center gap-3">
+          <img src={logoImage} alt="Plug Nai Logo" className="h-10 w-10 rounded-lg shadow-sm" />
+          <div className="text-xl font-black text-blue-600 tracking-tight">Plug Nai</div>
+        </div>
         <div className="space-y-3">
           <div className="flex items-center gap-3 text-sm font-medium text-muted-foreground">
             <span className="inline-block h-4 w-4 rounded-full bg-blue-500 shadow-[0_0_8px_rgba(59,130,246,0.6)]" /> Free
